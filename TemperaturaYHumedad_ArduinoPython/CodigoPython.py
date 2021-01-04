@@ -13,13 +13,14 @@ def TomarDatos():
     Valores = [ ]
     i = 0
 
-    Arduino = serial.Serial(port='/dev/ttyACM0', baudrate=9600)
+    Arduino = serial.Serial(port='/dev/ttyACM0', baudrate=9600) #Se crea el objeto Arduino con los parametros del puerto serie.
 
     CantDatos = int(input("Ingrese la cantidad de datos que desea tomar: "))
     Intervalo = input("Ingrese el intervalo de tiempo (min) en el que se tomaran los datos: ")
     
-    Arduino.write((Intervalo).encode())
+    Arduino.write((Intervalo).encode()) #Se envia el intervalo de tiempo al Arduino de manera codificada.
 
+    #Lee los datos provenientes del puerto serie, los decodifica y los almacena en formato lista dentro de una lista.
     while(i < CantDatos):
         Linea = Arduino.readline().decode()
         print(Linea)
@@ -36,9 +37,10 @@ def EscribirArchivo(listValores):
     Ingrese el nombre del archivo en el cual se almacenaran los datos,
     En caso, de que el nombre no conisida o no exista el archivo, se creara uno.
     No olvide escrivir la terminacion ".csv"
-    Nombre: """, "w")
+    Nombre: """, "w")   #Se abre el archivo en modo escritura.
     escribir = csv.writer(Archivo)
 
+    #Se escriben los datos en formato de filas.
     for renglon in listValores:
         escribir.writerow(renglon)
     Archivo.close()
@@ -53,13 +55,13 @@ def LeerArchivo():
     Archivo = open(input("""
     Ingrese el nombre del archivo del cual se desea extraer los datos. En caso, de que el nombre no conisida o no exista el archivo, se producira un error.
     No olvide escrivir la terminacion ".csv"
-    Nombre: """), "r")
+    Nombre: """), "r")  #Se abre el archivo en modo lectura.
 
-    #Extrae los datos del archivo y los almacena en una lista
+    #Extrae los datos del archivo y los almacena en una lista.
     for renglon in csv.reader(Archivo):
         Valores.append(renglon)
     Archivo.close()
-    #Separa y almacena los datos segun su tipo
+    #Separa y almacena los datos segun su tipo.
     for i in Valores:
         for x in i:
             if(i.index(x) == 0):
@@ -88,24 +90,22 @@ def MaximosMinimos(Humedad, Temperatura):
 def Graficar(Hora, Humedad, Temperatura):
     'Realiza los graficos correspondientes'
     TituloGrafico = input("Ingrese el titulo del grafico: ")
-    ValoresMaximosMinimos = MaximosMinimos(Humedad, Temperatura)
-    MaxMinHumedad = str("\nHumedad -->" + " Maximo: " + str(ValoresMaximosMinimos[0]) + "  Minimo: " + str(ValoresMaximosMinimos[1]))
-    MaxMinTemperatura = str("\nTemperatura -->" + " Maximo: " + str(ValoresMaximosMinimos[2]) + "    Minimo: " + str(ValoresMaximosMinimos[3]))
-
+    #Grafico N°1
     plt.subplot(2, 1, 1)
     plt.plot(Hora, Humedad, color='b')
     plt.xlim(9, 23)
     plt.title(TituloGrafico)
     plt.ylabel('Humedad(%)')
-    
+    #Grafico N°2
     plt.subplot(2, 1, 2)
     plt.plot(Hora, Temperatura, color='r')
     plt.xlim(9, 23)
     plt.ylabel('Temperatura(°C)')
     plt.xlabel('Tiempo(hs)')
-    
-    print(MaxMinHumedad)
-    print(MaxMinTemperatura)
+
+    ValoresMaximosMinimos = MaximosMinimos(Humedad, Temperatura)
+    print("\nHumedad -->" + " Maximo: " + str(ValoresMaximosMinimos[0]) + "  Minimo: " + str(ValoresMaximosMinimos[1]))
+    print("\nTemperatura -->" + " Maximo: " + str(ValoresMaximosMinimos[2]) + "    Minimo: " + str(ValoresMaximosMinimos[3]))
 
     plt.show()
 

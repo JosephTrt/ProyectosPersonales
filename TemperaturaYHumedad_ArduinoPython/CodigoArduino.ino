@@ -1,15 +1,15 @@
+//Librerias
 #include <RTClib.h>
 #include <Wire.h>
 #include <DHT.h>
-
+//Definiciones
 #define dhtPin 2
 #define dhtType DHT11
-
+//Variables
 int tiempo;
-
-RTC_DS1307 rtc;
 DateTime Hora;
-
+//Objetos
+RTC_DS1307 rtc;
 DHT dht(dhtPin, dhtType);
 
 void setup() {
@@ -21,7 +21,7 @@ void setup() {
   //setTime(11, 40, 0, 29, 12, 20);
   
   while(tiempo == 0) {
-    tiempo = Mapeo(valorIngresado());
+    tiempo = Numerificacion(valorIngresado());
   }
 }
 void loop() {
@@ -42,7 +42,7 @@ String valorIngresado() {
     }
   }
 }
-int Mapeo(String numIngresado) {
+int Numerificacion(String numIngresado) {
   int numeroComvertido = numIngresado.toInt();
   return numeroComvertido;
 }
